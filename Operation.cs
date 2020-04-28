@@ -19,7 +19,7 @@ namespace Refactored
                 input = ReadInput();
                 if (input == "")
                 {
-                    Console.Write("Enter a valid username: ");
+                    Tools.ColorfulWrite("Enter a valid username: ");
                 }
             }
             while (input == "");
@@ -40,37 +40,40 @@ namespace Refactored
             Console.Write(msg);
             do
             {
-                if (isSecret == true)
+                do
                 {
-                    option = MaskInput();
-                }
-                else
-                {
-                    option = ReadInput();
-                }
+                    if (isSecret == true)
+                    {
+                        option = MaskInput();
+                    }
+                    else
+                    {
+                        option = ReadInput();
+                    }
+
+                } while (IsRepeated(option));                              
                 
                 isNumberValid = int.TryParse(option, out result);
                 if (isNumberValid != true)
                 {
-                    Console.Write("Enter digits only: ");
+                    Tools.ColorfulWrite("Enter digits only: ");
                 }
                 else if (option.Length != numberLength)
                 {
-                    Console.Write("Enter {0} digits: ", numberLength);
+                    Tools.ColorfulWrite($"Enter {numberLength} digits: ");
                 }
             }
             while (isNumberValid != true || option.Length != numberLength);
             return result;
         }
 
-        public static string ReadInput()
+        static string ReadInput()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             string input= Console.ReadLine();
             Console.ResetColor();
             return input;
         }
-
 
         //I have adapted this masker() {password masking console application} from Stack Overflow
         //https://stackoverflow.com/questions/3404421/password-masking-console-application
@@ -105,6 +108,23 @@ namespace Refactored
 
             Console.ResetColor();
             return password;
+        }
+
+        static bool IsRepeated(string s)
+        {
+            bool status = false;
+            for (int i = 0; i < s.Length; i++)
+            {
+                for (int j = (i + 1); j < s.Length; ++j)
+                {
+                    if (s[i] == s[j])
+                    {
+                        Tools.ColorfulWrite("Do not repeat digits: ");
+                        return true;
+                    }
+                }
+            }
+            return status;
         }
     }
 }

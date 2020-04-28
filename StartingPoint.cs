@@ -5,31 +5,24 @@ namespace Refactored
 {
     class StartingPoint
     {
-        static string promptUsername = "Enter your preferred username: ";
-        static string promptSecretDigits = "Enter the secret digits: ";
-        static int digitsToBeGuessedLength = 4;
-        static string userCreated = " successfully created!";
-
         static void Main()
         {
-            User PlayerOne = CreateUser("PLAYER ONE");
-            User PlayerTwo = CreateUser("PLAYER TWO");            
+            User PlayerOne = User.CreateUser("PLAYER ONE");
+            User PlayerTwo = User.CreateUser("PLAYER TWO");
 
+            while(!PlayerOne.IsGuessed && !PlayerTwo.IsGuessed)
+            {
+                if (PlayerTwo.IsActive)
+                {
+                    PlayerTwo.Challenge(PlayerOne);
+                }
+                else
+                {
+                    PlayerOne.Challenge(PlayerTwo);
+                }
+            }
             Console.ReadKey();
-        }
-
-        static User CreateUser(string userToBeCreated)
-        {
-            Tools.ColorfulWriteLine(userToBeCreated, ConsoleColor.DarkYellow);
-            string name = Operation.TextValidator(promptUsername);
-            int secretDigits = Operation.NumberValidator(promptSecretDigits, digitsToBeGuessedLength, true);
-            User user = new User(name, secretDigits);
-            Tools.ColorfulWriteLine(user.Name + userCreated, ConsoleColor.Green);
-            Console.WriteLine();
-
-            return user;
-        }
-
+        }        
     }
 }
 
